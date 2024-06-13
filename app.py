@@ -10,9 +10,10 @@ from langchain_community.document_loaders import PyPDFDirectoryLoader
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from dotenv import load_dotenv
 import os
+
 load_dotenv()
 
-## load the GROQ And OpenAI API KEY 
+
 groq_api_key=os.getenv('GROQ_API_KEY')
 os.environ["GOOGLE_API_KEY"]=os.getenv("GOOGLE_API_KEY")
 
@@ -45,7 +46,7 @@ def vector_embedding():
         st.session_state.vectors=FAISS.from_documents(st.session_state.final_documents,st.session_state.embeddings) #vector OpenAI embeddings
 
 
-prompt1=st.text_input("Enter Your Question From Doduments")
+prompt1=st.text_input("Enter Your Question From Documents")
 
 if st.button("Documents Embedding"):
     vector_embedding()
@@ -59,15 +60,15 @@ if prompt1:
     retrieval_chain=create_retrieval_chain(retriever,document_chain)
     start=time.process_time()
     response=retrieval_chain.invoke({'input':prompt1})
-    print("Response time :",time.process_time()-start)
+    print("Response time : ",time.process_time()-start)
     st.write(response['answer'])
 
     # With a streamlit expander
-    with st.expander("Document Similarity Search"):
+    with st.expander("Document Similarity Search "):
         # Find the relevant chunks
         for i, doc in enumerate(response["context"]):
             st.write(doc.page_content)
-            st.write("--------------------------------")
+            st.write("------------------------")
 
 
 
